@@ -139,6 +139,16 @@ flutter run --profile
 ```
 
 ## 📱 App Demo
-| iOS | Android |
-| :---: | :---: |
-| ![iOS Demo]https://github.com/user-attachments/assets/2d9475c5-c967-4fd4-8b75-0286fa97eba6 | ![Android Demo]https://github.com/user-attachments/assets/1aca264b-977e-4676-bc39-c9a3da50679b |
+
+<div align="center">
+  <table>
+    <tr>
+      <td><b>iOS (Simulador)</b></td>
+      <td><b>Android (Emulador)</b></td>
+    </tr>
+    <tr>
+      <td><img src="https://github.com/user-attachments/assets/2d9475c5-c967-4fd4-8b75-0286fa97eba6" width="300" /></td>
+      <td><img src="https://github.com/user-attachments/assets/1aca264b-977e-4676-bc39-c9a3da50679b" width="300" /></td>
+    </tr>
+  </table>
+</div>
