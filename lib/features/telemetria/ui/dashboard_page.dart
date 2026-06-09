@@ -66,7 +66,8 @@ class _DashboardView extends StatelessWidget {
 
                   if (state is TelemetriaAtualizadaState) {
                     final isAlerta =
-                        state.latitude.abs() > 90 || state.longitude.abs() > 180;
+                        state.latitude.abs() > 90 ||
+                        state.longitude.abs() > 180;
 
                     return Column(
                       children: [
@@ -91,9 +92,19 @@ class _DashboardView extends StatelessWidget {
                         const SizedBox(height: 12),
 
                         Text(
-                          isAlerta
-                              ? '⚠️ ALERTA DE SISTEMA'
-                              : 'SISTEMA ONLINE',
+                          'PEAK: ${state.temperaturaMaxima}°C',
+                          style: const TextStyle(
+                            color: Colors.grey,
+                            fontSize: 12,
+                            letterSpacing: 1.2,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+
+                        const SizedBox(height: 12),
+
+                        Text(
+                          isAlerta ? '⚠️ ALERTA DE SISTEMA' : 'SISTEMA ONLINE',
                           style: TextStyle(
                             color: isAlerta ? Colors.orange : Colors.green,
                             fontWeight: FontWeight.bold,

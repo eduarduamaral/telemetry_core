@@ -14,14 +14,16 @@ class TelemetriaCarregandoState extends TelemetriaState {}
 class TelemetriaAtualizadaState extends TelemetriaState {
   final double latitude;
   final double longitude;
+  final int temperaturaMaxima;
 
   const TelemetriaAtualizadaState({
     required this.latitude,
     required this.longitude,
+    required this.temperaturaMaxima,
   });
 
   @override
-  List<Object> get props => [latitude, longitude];
+  List<Object> get props => [latitude, longitude, temperaturaMaxima];
 }
 
 class TelemetriaErroState extends TelemetriaState {

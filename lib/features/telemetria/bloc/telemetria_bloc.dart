@@ -7,6 +7,7 @@ import 'telemetria_state.dart';
 class TelemetriaBloc extends Bloc<TelemetriaEvent, TelemetriaState> {
   final ISensorRepository _sensorRepository;
   StreamSubscription<String>? _sensorSubscription;
+  int _temperaturaMaxima = 0;
 
   TelemetriaBloc({required this._sensorRepository})
     : super(TelemetriaInicialState()) {
@@ -19,6 +20,7 @@ class TelemetriaBloc extends Bloc<TelemetriaEvent, TelemetriaState> {
     Emitter<TelemetriaState> emit,
   ) {
     emit(TelemetriaCarregandoState());
+    _temperaturaMaxima = 0;
 
     _sensorSubscription?.cancel();
 
@@ -54,7 +56,18 @@ class TelemetriaBloc extends Bloc<TelemetriaEvent, TelemetriaState> {
       return;
     }
 
-    emit(TelemetriaAtualizadaState(latitude: latitude, longitude: longitude));
+    final temperaturaAtual = latitude.abs().round();
+    if (temperaturaAtual > _temperaturaMaxima) {
+      _temperaturaMaxima = temperaturaAtual;
+    }
+
+    emit(
+      TelemetriaAtualizadaState(
+        latitude: latitude,
+        longitude: longitude,
+        temperaturaMaxima: _temperaturaMaxima,
+      ),
+    );
   }
 
   @override
