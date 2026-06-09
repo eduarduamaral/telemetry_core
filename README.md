@@ -1,122 +1,40 @@
-# Telemetry Core
-
-Real-time vehicle telemetry application built with Flutter, focused on streaming hardware sensor data from the device into a high-performance, GPU-accelerated dashboard.
-
----
-
-## Project Overview
-
-`telemetry_core` is a real-time telemetry system that ingests data from native hardware sensors (GPS, accelerometer, and engine-related signals) and renders them on a low-latency, automotive-grade dashboard.
-
-The application is designed around three pillars:
-
-- **Reactivity:** every sensor reading is propagated to the UI through a unidirectional event/state pipeline.
-- **Resilience:** the BLoC layer guarantees deterministic state transitions and graceful error handling.
-- **Performance:** the rendering pipeline is tuned to sustain 60 FPS even under continuous sensor updates.
-
----
-
-## Architecture Strategy
-
-The project follows **Clean Architecture** principles, with a clear separation between presentation, domain, and data layers.
-
-- **State Management — BLoC:** all UI state is owned by `TelemetriaBloc`, which consumes events (`IniciarMonitoramentoEvent`, `NovaLeituraRecebidaEvent`) and emits immutable states (`TelemetriaInicialState`, `TelemetriaCarregandoState`, `TelemetriaAtualizadaState`, `TelemetriaErroState`). `Equatable` is used to keep state comparisons cheap and predictable.
-- **Dependency Injection — GetIt:** the service locator (`core/di/service_locator.dart`) wires repositories and BLoCs, keeping widgets free from construction logic and making the codebase trivially testable.
-- **Layered structure:**
-  - `lib/features/telemetria/ui/` — Widgets and `CustomPainter` rendering.
-  - `lib/features/telemetria/bloc/` — Events, states and BLoC logic.
-  - `lib/features/telemetria/repositories/` — Abstractions over the native data sources (`ISensorRepository`).
-  - `lib/core/di/` — Composition root for dependencies.
-
-This separation makes business rules (e.g. *Peak Hold* of maximum temperature) independent of both the UI and the underlying platform channel.
-
----
-
-## Native Integration
-
-Hardware sensors are exposed to Dart through Flutter **`EventChannel`s**, providing a continuous stream of readings without polling.
-
-- The native layer (iOS/Swift, with parity planned for Android/Kotlin) opens the sensor pipelines and pushes events into the `EventChannel`.
-- On the Dart side, `ISensorRepository` wraps the channel as a typed `Stream<String>`, isolating the rest of the codebase from platform details.
-- The BLoC subscribes to that stream, parses each payload and emits a new immutable state for the UI.
-
-This design keeps platform-specific code thin and replaceable, while the Dart layer treats every sensor as a reactive stream.
-
----
-
-## Performance Optimization
-
-Real-time telemetry only works if the UI never drops frames. The dashboard was profiled and tuned with **Flutter DevTools** to sustain **60 FPS** during sustained sensor streaming.
-
-Key optimizations:
-
-- **`CustomPainter`-based gauges:** the analog gauge (`FuelTechGauge`) is drawn directly on the GPU through `CustomPainter`, avoiding widget-tree rebuilds for animated elements.
-- **Targeted rebuilds:** `BlocBuilder` is scoped to the smallest possible subtree so static parts of the UI never repaint when telemetry updates.
-- **Immutable states + `Equatable`:** identical states short-circuit rebuilds entirely.
-- **DevTools workflow:** the *Performance* and *CPU Profiler* tabs were used to validate frame budget, jank-free rebuilds and absence of unnecessary `setState` cascades.
-
----
-
-## Feature Highlight — Peak Hold
-
-The dashboard includes a *Peak Hold* indicator that retains the highest temperature observed during the current session:
-
-- The BLoC keeps the peak in memory and compares each new reading against it.
-- The new value is exposed as `temperaturaMaxima` inside `TelemetriaAtualizadaState` and reflected immutably through `Equatable` props.
-- The UI displays `PEAK: X°C` in a subdued style so the driver can review the run without distracting from the live gauge.
-
-This feature was specified, implemented and validated end-to-end using the methodology described below.
-
----
-
-## Development Methodology
-
-This project is developed using **Spec-Driven Development with AI-assisted coding**:
-
-1. **Specification first:** each feature begins as a Markdown spec (see [feature_peak_hold_spec.md](feature_peak_hold_spec.md)) describing context, business rules, architectural constraints and UI expectations.
-2. **AI-assisted implementation:** the spec is handed to an AI pair-programmer (GitHub Copilot / Claude) that proposes changes scoped strictly to the spec's contracts (State, BLoC, UI).
-3. **Human review & validation:** every diff is reviewed against the spec, type-checked through the Dart analyzer, and validated visually in the running app.
-4. **Repeatable process:** new specs follow the same template, ensuring the architecture and quality bar remain consistent as the codebase grows.
-
-This workflow keeps the AI focused on intent rather than guesswork, demonstrates alignment with modern engineering practices, and produces code that is both reviewable and predictable.
-
----
-
-## Getting Started
-
-Prerequisites:
-
-- Flutter SDK (stable channel)
-- Xcode (for iOS sensor integration)
-- CocoaPods (`sudo gem install cocoapods`)
-
-Run the app:
-
-```bash
-flutter pub get
-flutter run
-```
-
-Project layout:
-
-```
-lib/
-├── core/
-│   └── di/                    # GetIt service locator
-└── features/
-    └── telemetria/
-        ├── bloc/              # Events, states, BLoC
-        ├── repositories/      # ISensorRepository (EventChannel wrapper)
-        └── ui/                # DashboardPage + CustomPainter gauges
-```
-
----
-
-## Tech Stack
-
-- **Flutter / Dart** — UI and application logic
-- **flutter_bloc + Equatable** — predictable state management
-- **GetIt** — dependency injection
-- **EventChannel (Swift / Kotlin planned)** — native sensor bridge
-- **CustomPainter** — GPU-accelerated dashboard widgets
-- **Flutter DevTools** — performance profiling
+Telemetry Core
+telemetry_core é um sistema de telemetria em tempo real projetado para capturar dados de sensores de hardware nativos e renderizá-los em um painel de alta performance e baixa latência.
+🎯 Project Overview
+O telemetry_core é a base tecnológica para sistemas de monitoramento automotivo ou industrial. O foco principal é a ingestão de dados em alta frequência (via GPS/Sensores Nativos) e a exibição visual através de componentes gráficos customizados, garantindo uma experiência de 60 FPS constantes.
+🏗️ Architecture Strategy
+O projeto segue os princípios de Clean Architecture, garantindo desacoplamento entre lógica de negócio e plataforma.
+•	State Management (BLoC): A lógica de negócio é isolada no TelemetriaBloc. Utilizamos estados imutáveis e o pacote Equatable para garantir que a UI só seja redesenhada quando o dado sofrer alteração real, evitando processamento redundante.
+•	Dependency Injection (GetIt): O service_locator garante que as dependências sejam injetadas de forma desacoplada, permitindo que a camada de UI não conheça a implementação concreta dos repositórios.
+•	Layered Structure:
+•	lib/features/telemetria/ui/: Camada de apresentação e componentes de renderização (CustomPainter).
+•	lib/features/telemetria/bloc/: Camada de domínio (regras de negócio e gestão de estados).
+•	lib/features/telemetria/repositories/: Abstrações (Interfaces) que permitem a troca fácil entre sensores reais e mocks.
+🌉 Native Integration
+Para evitar o polling ineficiente, utilizamos Flutter EventChannels. O código nativo (Swift no iOS) abre um stream contínuo que envia dados diretamente para a camada Dart, onde o ISensorRepository os encapsula como um Stream<String>. Isso garante latência mínima na comunicação hardware-aplicação.
+🚀 Performance Optimization
+O dashboard foi tunado via Flutter DevTools para garantir fluidez total em dispositivos com Apple Silicon (M1/Pro).
+•	CustomPainter: Desenvolvemos o FuelTechGauge desenhando diretamente no Canvas da GPU. Isso evita o custo de reconstrução da árvore de widgets, garantindo um desempenho superior em animações rápidas.
+•	Optimized Render Pipeline: O uso do --profile mode e a análise de Raster vs UI Thread garantiram que todos os componentes fiquem dentro do budget de 16ms, eliminando jank (travamentos).
+💡 Feature Highlight: Peak Hold
+Implementamos um sistema de retenção de pico máximo (temperaturaMaxima) que funciona de forma reativa:
+	1.	O BLoC compara cada nova leitura com o pico armazenado.
+	2.	O estado é emitido com a nova métrica.
+	3.	A UI consome esse dado sem necessidade de lógica complexa de comparação no componente visual.
+🛠️ Development Methodology
+Este projeto adota o Spec-Driven Development (SDD):
+	1.	Specification First: Toda funcionalidade nasce de uma especificação escrita em Markdown (feature_peak_hold_spec.md).
+	2.	AI-Assisted Implementation: Utilizamos o GitHub Copilot para implementar as especificações.
+	3.	Human-in-the-Loop: Todo código gerado passa por revisão crítica, validação de tipagem e testes de performance, garantindo que a IA mantenha os padrões arquiteturais do projeto.
+🧪 Testing Strategy
+A arquitetura foi desenhada pensando em testabilidade. Como dependemos de uma interface (ISensorRepository), é trivial injetar um MockRepository para realizar testes unitários no BLoC (verificando se o Peak Hold é calculado corretamente) e testes de widget utilizando Golden Tests para garantir que o mostrador gráfico não sofra regressões visuais.
+🗺️ Roadmap
+•	[ ] Implementar Android Platform Channels (Kotlin).
+•	[ ] Criar suíte de testes unitários para a lógica do BLoC.
+•	[ ] Adicionar funcionalidade de "Reset de Sessão" (limpar picos).
+•	[ ] Refinar CustomPainter com labels dinâmicos de alta precisão.
+💻 Getting Started
+	1.	Prerequisites: Flutter SDK (Stable), Xcode.
+	2.	Setup: flutter pub get
+	3.	Run: flutter run --profile
+Este repositório é um estudo de caso sobre arquitetura reativa, integração nativa e performance em Flutter.
