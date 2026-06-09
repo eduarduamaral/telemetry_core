@@ -18,7 +18,7 @@ class SceneDelegate: FlutterSceneDelegate {
 		}
 
 		gpsChannel = FlutterEventChannel(
-			name: "fueltech/telemetria_gps",
+			name: "telemetry_core/telemetria_gps",
 			binaryMessenger: controller.binaryMessenger
 		)
 		gpsChannel?.setStreamHandler(gpsStreamHandler)

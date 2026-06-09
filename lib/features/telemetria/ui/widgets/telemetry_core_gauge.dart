@@ -2,12 +2,12 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 
 /// O Widget que envelopa a nossa pintura customizada
-class FuelTechGauge extends StatelessWidget {
+class TelemetryCoreGauge extends StatelessWidget {
   final double valorAtual; // Ex: Pode ser a temperatura, RPM ou Velocidade
   final double valorMaximo;
   final bool isAlerta;
 
-  const FuelTechGauge({
+  const TelemetryCoreGauge({
     super.key,
     required this.valorAtual,
     this.valorMaximo = 150.0,
@@ -92,7 +92,7 @@ class _GaugePainter extends CustomPainter {
     final pincelProgresso = Paint()
       ..color = isAlerta
           ? Colors.orange
-          : const Color(0xFFFF3E3E) // Vermelho FuelTech
+          : const Color(0xFFFF3E3E) // Vermelho telemetry_core
       ..style = PaintingStyle.stroke
       ..strokeWidth = 15
       ..strokeCap = StrokeCap.round;

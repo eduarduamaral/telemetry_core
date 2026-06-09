@@ -7,7 +7,7 @@ abstract class ISensorRepository {
 
 class SensorRepository implements ISensorRepository {
   static const EventChannel _gpsChannel = EventChannel(
-    'fueltech/telemetria_gps',
+    'telemetry_core/telemetria_gps',
   );
 
   @override

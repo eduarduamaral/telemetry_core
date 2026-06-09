@@ -4,7 +4,7 @@ import '../../../core/di/service_locator.dart';
 import '../bloc/telemetria_bloc.dart';
 import '../bloc/telemetria_event.dart';
 import '../bloc/telemetria_state.dart';
-import 'widgets/fueltech_gauge.dart';
+import 'widgets/telemetry_core_gauge.dart';
 
 class DashboardPage extends StatelessWidget {
   const DashboardPage({super.key});
@@ -27,7 +27,7 @@ class _DashboardView extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('FUELTECH TELEMETRY CORE (BLoC)'),
+        title: const Text('TELEMETRY CORE (BLoC)'),
         backgroundColor: const Color(0xFF1A1A1A),
         centerTitle: true,
         elevation: 0,
@@ -72,7 +72,7 @@ class _DashboardView extends StatelessWidget {
                     return Column(
                       children: [
                         // Substituímos o Container simples pelo nosso componente desenhado na GPU
-                        FuelTechGauge(
+                        TelemetryCoreGauge(
                           valorAtual: state.latitude.abs().clamp(0.0, 150.0),
                           isAlerta: isAlerta,
                         ),

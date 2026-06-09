@@ -14,7 +14,7 @@ import io.flutter.plugin.common.EventChannel
 import java.util.Locale
 
 class MainActivity : FlutterActivity() {
-	private val gpsChannelName = "fueltech/telemetria_gps"
+	private val gpsChannelName = "telemetry_core/telemetria_gps"
 	private val locationPermissionRequestCode = 1001
 
 	private var locationManager: LocationManager? = null

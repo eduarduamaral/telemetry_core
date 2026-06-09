@@ -5,11 +5,11 @@ import 'features/telemetria/ui/dashboard_page.dart';
 void main() {
   // Inicializa o Service Locator
   setupDependencies();
-  runApp(const FuelTechPanelApp());
+  runApp(const TelemetryCorePanelApp());
 }
 
-class FuelTechPanelApp extends StatelessWidget {
-  const FuelTechPanelApp({super.key});
+class TelemetryCorePanelApp extends StatelessWidget {
+  const TelemetryCorePanelApp({super.key});
 
   @override
   Widget build(BuildContext context) {
